@@ -1,6 +1,0 @@
-- hosts: carnage
-  tasks:
-    - name: execute script with msg
-      script: /inventory/sample.sh
-      register: hello
-    - debug: msg = "{{ hello.stdout }}"

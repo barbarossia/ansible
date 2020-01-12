@@ -1,22 +1,27 @@
 - hosts: esxi
   tasks:
-    - name: Check that the batch exists
-      stat:
-        path: /root/base
-      register: stat_result
-      tags: all-vms
+    - name: copy base
+      copy: 
+        src: /inventory/script/esxi/base
+        dest: /root/
+        mode: u=rx,g=r,o=r
+        force: yes
+      tags: copy
     - name: get all vms name
       command: sh /root/base all
       register: content
-      when: stat_result.stat.exists == True  
-      tags: all-vms
+      args:
+        removes: /root/base 
+      tags: all-vms, all-vm-name
+    - name: print all vms name
+      debug: var=content.stdout_lines 
+      tags: all-vms, all-vm-name
     - name: get venom state
       command: sh /root/base state venom
       register: state
+      args:
+        removes: /root/base 
       tags: venom-state
-    - name: print all vms name
-      debug: var=content.stdout_lines 
-      tags: all-vms
     - name: print venom state
       debug: var=state.stdout_lines
       tags: venom-state
