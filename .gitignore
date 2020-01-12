@@ -1,1 +1,2 @@
-/inventory/script/nero/etc/v2ray/barbarossia.ga/tls.json
+# ignore json
+**/*.json
