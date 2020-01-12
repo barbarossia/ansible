@@ -48,6 +48,42 @@
     - name: print id
       debug: var=id.stdout_lines 
       tags: id
+    - name: get vm state
+      command: sh /root/base state "{{name}}" # ansible-playbook esxi.yml -e 'name="DSM"' --tags state
+      register: state
+      args: 
+        removes: /root/base
+      tags: state
+    - name: print state
+      debug: var=state.stdout_lines 
+      tags: state
+    - name: suspend vm
+      command: sh /root/base suspend "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags suspend
+      register: suspend
+      args: 
+        removes: /root/base
+      tags: suspend
+    - name: print suspend result
+      debug: var=suspend.stdout_lines 
+      tags: suspend
+    - name: start vm
+      command: sh /root/base start "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags start
+      register: start
+      args: 
+        removes: /root/base
+      tags: start
+    - name: print start result
+      debug: var=start.stdout_lines 
+      tags: start
+    - name: shutdown vm
+      command: sh /root/base down "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags down
+      register: down
+      args: 
+        removes: /root/base
+      tags: down
+    - name: print down result
+      debug: var=down.stdout_lines 
+      tags: down
     
 
 
