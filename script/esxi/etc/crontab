@@ -1,0 +1,13 @@
+#min hour day mon dow command
+1    1    *   *   *   /sbin/tmpwatch.py
+1    *    *   *   *   /sbin/auto-backup.sh
+0    *    *   *   *   /usr/lib/vmware/vmksummary/log-heartbeat.py
+*/5  *    *   *   *   /bin/hostd-probe.sh ++group=host/vim/vmvisor/hostd-probe/stats/sh
+00   1    *   *   *   localcli storage core device purge
+10   9    *   *   *   vim-cmd vmsvc/power.on 5
+10   18   *   *   *   vim-cmd vmsvc/power.suspend 5
+30   23   *   *   *   vim-cmd vmsvc/power.suspend 14
+0    8    *   *   *   vim-cmd vmsvc/power.on 14
+0    10   *   *   *   vim-cmd vmsvc/power.on 7
+0    22   *   *   *   vim-cmd vmsvc/power.suspend 10
+0    6    *   *   *   vim-cmd vmsvc/power.on 10

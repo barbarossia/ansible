@@ -1,0 +1,12 @@
+#! /bin/bash
+
+pid=$(cat var/run/crond.pid);
+echo "kill old crond: $pid";
+kill $pid;
+/bin/crond;
+sleep 5
+newpid=$(cat var/run/crond.pid);
+echo "restarted crond now is: $newpid";
+
+
+

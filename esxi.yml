@@ -6,7 +6,30 @@
         dest: /root/
         mode: u=rx,g=r,o=r
         force: yes
-      tags: copy
+      tags: copy, copy base
+    - name: copy crontab
+      copy: 
+        src: /inventory/script/esxi/etc/crontab
+        dest: /var/spool/cron/crontabs/root
+        mode: u=r,g=r,o=r+t
+        force: yes
+      tags: copy, copy-crontab
+    - name: copy cron restart
+      copy: 
+        src: /inventory/script/esxi/restart_cron
+        dest: /root
+        mode: u=rx,g=r,o=r
+        force: yes
+      tags: copy, copy-cron-restart, cron-restart
+    - name: crontab restart
+      command: sh /root/restart_cron
+      args:
+        removes: /root/restart_cron
+      register: result
+      tags: cron-restart
+    - name: print crontab restart
+      debug: var=result.stdout_lines
+      tags: cron-restart
     - name: get all vms name
       command: sh /root/base all
       register: content
@@ -16,28 +39,15 @@
     - name: print all vms name
       debug: var=content.stdout_lines 
       tags: all-vms, all-vm-name
-    - name: get venom state
-      command: sh /root/base state venom
-      register: state
-      args:
-        removes: /root/base 
-      tags: venom-state
-    - name: print venom state
-      debug: var=state.stdout_lines
-      tags: venom-state
-    - name: start venom
-      command: sh /root/base start venom
-      register: output
-      tags: start-venom
-    - name: print start venom
-      debug: var=output.stdout_lines
-      tags: start-venom 
-    - name: get windows server 2019 state
-      command: sh /root/base state WindowsServer2019
-      register: state
-      tags: win2019-state
-    - name: pring windows server 2019 state
-      debug: var=state.stdout_lines
-      tags: win2019-state 
+    - name: get vm id
+      command: sh /root/base id "{{name}}" # ansible-playbook esxi.yml -e 'name="DSM"' --tags id
+      register: id
+      args: 
+        removes: /root/base
+      tags: id
+    - name: print id
+      debug: var=id.stdout_lines 
+      tags: id
+    
 
 
