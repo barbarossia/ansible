@@ -1,0 +1,33 @@
+#!/bin/bash
+
+function convert() {
+  folder=$1
+  input_full_path=/mnt/input/$folder
+  echo "$input_full_path"
+  input_path=`basename $input_full_path`
+  echo "$input_path"
+
+  output_full_path="/mnt/output/$input_path"
+  echo "$output_full_path"
+
+  mkdir -p $output_full_path
+  touch $output_full_path/convert.lock
+
+  cd $input_full_path
+
+  for i in *.mp4;
+    do name=`echo "$i" | cut -d'.' -f1`
+    echo "$i"
+    echo "$name"
+    echo "$output_full_path/$i"
+    ffmpeg -i "$i" -c:v libx264 -r 30 -c:a copy "$output_full_path/$i"
+  done
+
+  rm $output_full_path/convert.lock
+}
+
+if [ "$1" == "convert" ]; then
+    convert $2
+else 
+    echo "wrong argument"
+fi

@@ -1,0 +1,10 @@
+- hosts: esxi
+  tasks:
+    - name: copy base
+      copy: 
+        src: /inventory/script/esxi/base
+        dest: /root/
+        mode: u=rx,g=r,o=r
+        force: yes
+      tags: copy
+

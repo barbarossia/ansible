@@ -1,0 +1,6 @@
+- hosts: home
+  tasks:
+    - name: execute script with var
+      script: /inventory/sample.sh
+      register: hello
+    - debug: var=hello.stdout

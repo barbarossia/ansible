@@ -1,0 +1,18 @@
+openwrt: 
+  hosts: 
+    sideroute:
+      ansible_host: 192.168.1.9 
+    download: 
+      ansible_host: 192.168.1.113 
+    home: 
+      ansible_host: 192.168.1.4 
+    barbarossia:
+      ansible_host: 192.168.1.1
+    nero:
+      ansible_host: 192.168.1.3
+
+
+
+  
+    
+

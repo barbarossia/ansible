@@ -1,0 +1,12 @@
+vm:
+  hosts:  
+    carnage:
+      ansible_host: 192.168.1.99      
+    venom:
+      ansible_host: 192.168.1.105
+    apocalpyse:
+      ansible_host: 192.168.1.101
+      ansible_user: root
+  
+    
+

@@ -1,0 +1,13 @@
+- hosts: home
+  tasks:
+    - name: Check that the sync exists
+      stat:
+        path: /root/sync-download
+      register: stat_result
+    - name: run sync movie
+      command: screen -d -m sh /root/sync-download movie
+      when: stat_result.stat.exists == True 
+      tags: movie
+    - name: run sync video
+      command: screen -d -m sh /root/sync-download video
+      tags: video

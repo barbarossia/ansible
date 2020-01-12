@@ -1,0 +1,20 @@
+- hosts: barbarossia
+  tasks:
+    - name: Check that the block exists
+      stat:
+        path: /root/Block_torrents_using_iptables
+      register: stat_result
+      tags: block
+    - name: run block
+      command: sh /root/Block_torrents_using_iptables
+      when: stat_result.stat.exists == True 
+      tags: block
+    - name: Check that the unblock exists
+      stat:
+        path: /root/UnBlock_torrents_using_iptables
+      register: stat_result
+      tags: unblock
+    - name: run unblock
+      command: sh /root/UnBlock_torrents_using_iptables
+      when: stat_result.stat.exists == True 
+      tags: unblock

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# downstream 1.5Mbps
+/usr/sbin/tc qdisc add dev br-lan root handle 1: htb default 30
+/usr/sbin/tc class add dev br-lan parent 1: classid 1:1 htb rate 1.5mbit
+/usr/sbin/tc qdisc add dev br-lan parent 1:1 handle 10: sfq perturb 10
+/usr/sbin/tc filter add dev br-lan protocol ip parent 1:0 prio 1 u32 match ip dst 192.168.1.13/32 flowid 1:1
+/usr/sbin/tc filter add dev br-lan protocol ip parent 1:0 prio 1 u32 match ip dst 192.168.1.114/32 flowid 1:1
+
+
+# upstream 160Kbps
+/usr/sbin/tc qdisc add dev pppoe-wan root handle 1: htb default 30
+/usr/sbin/tc class add dev pppoe-wan parent 1: classid 1:2 htb rate 160kbit
+/usr/sbin/tc qdisc add dev pppoe-wan parent 1:2 handle 20: sfq perturb 10
+/usr/sbin/tc filter add dev pppoe-wan protocol ip parent 1:0 prio 1 handle 20 fw flowid 1:2
+/usr/sbin/iptables -t mangle -A FORWARD -s 192.168.1.13 -j MARK --set-mark 20
+/usr/sbin/iptables -t mangle -A FORWARD -s 192.168.1.114 -j MARK --set-mark 20

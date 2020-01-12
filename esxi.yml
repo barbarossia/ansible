@@ -1,0 +1,38 @@
+- hosts: esxi
+  tasks:
+    - name: Check that the batch exists
+      stat:
+        path: /root/base
+      register: stat_result
+      tags: all-vms
+    - name: get all vms name
+      command: sh /root/base all
+      register: content
+      when: stat_result.stat.exists == True  
+      tags: all-vms
+    - name: get venom state
+      command: sh /root/base state venom
+      register: state
+      tags: venom-state
+    - name: print all vms name
+      debug: var=content.stdout_lines 
+      tags: all-vms
+    - name: print venom state
+      debug: var=state.stdout_lines
+      tags: venom-state
+    - name: start venom
+      command: sh /root/base start venom
+      register: output
+      tags: start-venom
+    - name: print start venom
+      debug: var=output.stdout_lines
+      tags: start-venom 
+    - name: get windows server 2019 state
+      command: sh /root/base state WindowsServer2019
+      register: state
+      tags: win2019-state
+    - name: pring windows server 2019 state
+      debug: var=state.stdout_lines
+      tags: win2019-state 
+
+

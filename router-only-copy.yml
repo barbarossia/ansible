@@ -1,0 +1,17 @@
+- hosts: barbarossia
+  tasks:
+    - name: copy Block
+      copy: 
+        src: /inventory/script/router/start_shaping
+        dest: /root/
+        mode: u=rx,g=r,o=r
+        force: yes
+      tags: copy
+    - name: copy unBlock
+      copy: 
+        src: /inventory/script/router/stop_shaping
+        dest: /root/
+        mode: u=rx,g=r,o=r
+        force: yes
+      tags: copy
+

@@ -1,0 +1,10 @@
+- hosts: venom
+  tasks:
+    - name: copy batch
+      copy: 
+        src: /inventory/script/venom/batch
+        dest: /home/barbarossia
+        mode: u=rx,g=r,o=r
+        force: yes
+      tags: copy
+

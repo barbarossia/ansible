@@ -1,0 +1,70 @@
+#! /bin/bash
+
+vm_id=0
+vm_state='unKnown'
+
+function get_vm_id () {
+    vm_name=$1
+    vm_id=$(vim-cmd vmsvc/getallvms | grep $vm_name | awk '{print $1}')
+    echo $vm_id
+}
+
+
+function get_vm_state () {
+    vm_state=`vim-cmd vmsvc/power.getstate $vm_id | sed '2!d'`
+    echo $vm_state
+}
+
+function start_vm () {
+    vm_name=$1
+    get_vm_id $vm_name   
+    get_vm_state
+    if [ "$vm_state" == "Suspended" -o "$vm_state" == "Powered off" ]; then
+        vim-cmd vmsvc/power.on $vm_id
+    else 
+        echo "vm has invalid power state: $vm_state"
+    fi
+}
+
+function off_vm () {
+    vm_name=$1
+    get_vm_id $vm_name   
+    get_vm_state
+    if [ "$vm_state" == "Suspended" -o "$vm_state" == "Powered on" ]; then
+        vim-cmd vmsvc/power.off $vm_id
+    else
+        echo "vm has invalid power state: $vm_state"
+    fi
+}
+
+function all_vms() {
+    vim-cmd vmsvc/getallvms | awk '{print $2}'
+}
+
+function suspend_vm () {
+    vm_name=$1
+    get_vm_id $vm_name   
+    get_vm_state
+    if [ "$vm_state" == "Powered on" ]; then
+        vim-cmd vmsvc/power.suspend $vm_id
+    else
+        echo "vm has invalid power state: $vm_state"
+    fi
+}
+
+if [ "$1" == "start" ]; then
+    start_vm $2
+elif [ "$1" == "off" -o  "$1" == "down" ]; then
+    off_vm $2
+elif [ "$1" == "suspend" ]; then
+    suspend_vm $2
+elif [ "$1" == "id" ]; then
+    get_vm_id $2
+elif [ "$1" == "state" ]; then
+    get_vm_id $2
+    get_vm_state
+elif [ "$1" == "all" ]; then
+    all_vms
+else 
+    echo "wrong argument"
+fi
