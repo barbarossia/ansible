@@ -1,0 +1,23 @@
+- hosts: nero
+  tasks:
+    - name: copy magneto init.d 
+      copy: 
+        src: /inventory/script/nero/etc/init.d/magneto
+        dest: /etc/init.d/
+        mode: u=rwx,g=rx,o=rx
+        force: yes
+      tags: copy, copy-magneto
+    - name: copy wolverine init.d 
+      copy: 
+        src: /inventory/script/nero/etc/init.d/wolverine
+        dest: /etc/init.d/
+        mode: u=rwx,g=rx,o=rx
+        force: yes
+      tags: copy, copy-wolverine
+    - name: run magneto
+      command: /etc/init.d/magneto "{{action}}"
+      tags: magneto
+    - name: run wolverine
+      command: /etc/init.d/wolverine "{{action}}"
+      tags: wolverine
+        

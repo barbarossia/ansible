@@ -1,0 +1,80 @@
+#! /bin/bash
+
+download_server=192.168.1.113
+
+function pre_process() {
+    src=$1
+    dest=$2
+
+    
+    touch /mnt/sdb1/$dest/rsync.lock
+    mount $download_server:/mnt/sdb1/download/$src /mnt/download
+}
+
+function post_process() {
+    src=$1
+    dest=$2
+    
+    umount /mnt/download
+    rm /mnt/sdb1/$dest/rsync.lock 
+}
+
+function sync_movie() {
+    /usr/bin/rsync \
+        --include '*.mkv' \
+        --include '*.mp4' \
+        --exclude '*.torrent' \
+        --exclude '*.txt' \
+        -av \
+        --log-file=/mnt/sdb1/$dest/$(date +%Y%m%d)_rsync.log \
+        --progress \
+        /mnt/download/ /mnt/sdb1/$dest;
+}
+
+function sync_myvideo() {
+    /usr/bin/rsync \
+        --exclude '*.part' \
+        -av \
+        --log-file=/mnt/sdb1/$dest/$(date +%Y%m%d)_rsync.log \
+        --progress \
+        /mnt/download/ /mnt/sdb1/$dest;
+}
+
+function sync() {
+    /usr/bin/rsync -av \
+        --log-file=/mnt/sdb1/$dest/$(date +%Y%m%d)_rsync.log \
+        --progress \
+        /mnt/download/ /mnt/sdb1/$dest;
+}
+
+function sync_download() {
+    func=$1;
+    src=$2;
+    dest=$3;
+
+    test -f /mnt/sdb1/$dest/rsync.lock && exit 1;
+    pre_process $src $dest;
+    $func;
+    post_process $src $dest;
+}
+
+
+if [ "$1" == "movie" ]; then
+    sync_download sync_movie movie movie;
+elif [ "$1" == "video" ]; then
+    sync_download sync video video;
+elif [ "$1" == "myvideo" ]; then
+    sync_download sync_myvideo myvideo myvideo;
+elif [ "$1" == "yoyo" ]; then
+    sync_download sync yoyo yoyo;
+elif [ "$1" == "document" ]; then
+    sync_download sync document document;
+elif [ "$1" == "all" ]; then
+    sync_download sync_movie movie movie;
+    sync_download sync video video;
+    sync_download sync_myvideo myvideo myvideo;
+    sync_download sync yoyo yoyo;
+    sync_download sync document document;
+else 
+    echo "wrong argument"
+fi
