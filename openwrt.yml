@@ -1,0 +1,13 @@
+- hosts: sideroute
+  roles:
+      - openwrt
+  tasks:
+    - name: test
+      command: echo "test"
+      register: output
+    - name: output
+      debug: var=output.stdout_lines
+    - name: uninstall acme
+      opkg:
+        name: acme
+        state: absent

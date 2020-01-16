@@ -1,23 +1,25 @@
 - hosts: nero
+  roles:
+      - openwrt
   tasks:
-    - name: copy magneto init.d 
-      copy: 
-        src: /inventory/script/nero/etc/init.d/magneto
-        dest: /etc/init.d/
-        mode: u=rwx,g=rx,o=rx
-        force: yes
-      tags: copy, copy-magneto
-    - name: copy wolverine init.d 
-      copy: 
-        src: /inventory/script/nero/etc/init.d/wolverine
-        dest: /etc/init.d/
-        mode: u=rwx,g=rx,o=rx
-        force: yes
-      tags: copy, copy-wolverine
+    - import_tasks: ./nero/service.yml
+    - import_tasks: ./nero/config.yml
     - name: run magneto
-      command: /etc/init.d/magneto "{{action}}"
+      service: 
+        name: magneto
+        state: restarted
+        enabled: yes
       tags: magneto
     - name: run wolverine
-      command: /etc/init.d/wolverine "{{action}}"
+      service: 
+        name: wolverine
+        state: restarted
+        enabled: yes
       tags: wolverine
+    - name: run cyclops
+      service: 
+        name: cyclops
+        state: restarted
+        enabled: yes
+      tags: cyclops
         

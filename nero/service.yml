@@ -1,0 +1,21 @@
+- name: copy magneto init.d 
+  copy: 
+    src: /inventory/script/nero/etc/init.d/magneto
+    dest: /etc/init.d/
+    mode: u=rwx,g=rx,o=rx
+    force: yes
+  tags: copy, copy-magneto
+- name: copy wolverine init.d 
+  copy: 
+    src: /inventory/script/nero/etc/init.d/wolverine
+    dest: /etc/init.d/
+    mode: u=rwx,g=rx,o=rx
+    force: yes
+  tags: copy, copy-wolverine
+- name: copy cyclops init.d
+  copy:
+    src: /inventory/script/nero/etc/init.d/cyclops
+    dest: /etc/init.d/
+    mode: u=rxw,g=rx,o=rx
+    force: yes
+  tags: copy, copy-cyclops

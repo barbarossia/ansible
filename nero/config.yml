@@ -1,0 +1,7 @@
+- name: copy cylops config
+  copy:
+    src: /inventory/script/nero/etc/v2ray/npsboost/tls.json
+    dest: /etc/v2ray/npsboost/tls.json
+    mode: u=rx,g=r,o=r
+    force: yes
+  tags: copy, copy-config, copy-cyclops-config
