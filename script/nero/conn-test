@@ -1,0 +1,74 @@
+#! /bin/bash
+
+function test() {
+    port=$1
+    if [ "$port" == "local" ]; then
+        curl -s \
+            --connect-timeout 5 \
+            --max-time 10 \
+            --retry 5 \
+            --retry-max-time 60 \
+            'https://www.baidu.com' > /dev/null
+    else
+        curl -s \
+            --socks5 localhost:$port \
+            --connect-timeout 5 \
+            --max-time 10 \
+            --retry 5 \
+            --retry-max-time 60 \
+            'https://www.facebook.com' > /dev/null
+    fi
+} 
+
+function log() {
+    #echo "$@";
+    func=$1;
+    port=$2;
+    #echo $port;
+    $func $port;
+    if [ "$?" == "0" ]; then
+        logger 'port: '$port 'Network No Problem.'
+    else
+        logger 'port: '$port ' Network Problem.'
+    fi
+}
+
+
+function output() {
+    LOGTIME=$(date "+%Y-%m-%d %H:%M:%S");
+    func=$1;
+    port=$2;
+    $func $port;
+    if [ "$?" == "0" ]; then
+        echo '['$LOGTIME'] port: '$port' Network No Problem.'
+    else
+        echo '['$LOGTIME'] port: '$port' Dectect Network Problem.'
+    fi
+}
+
+function all() {
+    log test 'local';
+    log test 1180;
+    log test 1280;
+    log test 1480;
+}
+
+function all_output() {
+    output test 'local';
+    output test 1180;
+    output test 1280;
+    output test 1480;
+}
+
+
+if [ "$1" == "output" ]; then
+    output $2 $3
+elif [ "$1" == "all" ]; then
+    all;
+elif [ "$1" == "log" ]; then
+    log $2 $3;
+elif [ "$1" == "output" ]; then
+    all_output;
+else 
+    echo "wrong argument"
+fi

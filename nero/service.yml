@@ -19,3 +19,10 @@
     mode: u=rxw,g=rx,o=rx
     force: yes
   tags: copy, copy-cyclops
+- name: copy connection test
+  copy:
+    src: /inventory/script/nero/conn-test
+    dest: /root
+    mode: u=rxw,g=rx,o=rx
+    force: yes
+  tags: copy, copy-conn-test

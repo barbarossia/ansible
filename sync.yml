@@ -1,14 +1,11 @@
 - hosts: home
+  roles:
+      - openwrt
   tasks:
-    - name: copy sync-download
-      copy: 
-        src: /inventory/script/home/sync-download
-        dest: /root/sync-download
-        mode: u=rx,g=r,o=r
-        force: yes
-      tags: copy, sync
+    - import_tasks: ./sync/download.yml
     - name: run sync
-      command: screen -d -m sh /root/sync-download "{{action}}"
+      nohup:
+        command: sh /root/sync-download all
       args: 
         removes: /root/sync-download
       tags: sync

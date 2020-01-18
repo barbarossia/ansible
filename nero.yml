@@ -22,4 +22,13 @@
         state: restarted
         enabled: yes
       tags: cyclops
+    - name: run connection test
+      command: sh /root/conn-test output test 1180
+      register: output
+      args:
+        removes: /root/conn-test
+      tags: test-conn
+    - name: print connection test result
+      debug: var=output.stdout_lines
+      tags: test-conn
         
