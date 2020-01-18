@@ -1,85 +1,65 @@
 - hosts: esxi
   tasks:
-    - name: copy base
-      copy: 
-        src: /inventory/script/esxi/base
-        dest: /root/
-        mode: u=rx,g=r,o=r
-        force: yes
-      tags: copy, copy base
-    - name: copy crontab
-      copy: 
-        src: /inventory/script/esxi/etc/crontab
-        dest: /var/spool/cron/crontabs/root
-        mode: u=r,g=r,o=r+t
-        force: yes
-      tags: copy, copy-crontab
-    - name: copy cron restart
-      copy: 
-        src: /inventory/script/esxi/restart_cron
-        dest: /root
-        mode: u=rx,g=r,o=r
-        force: yes
-      tags: copy, copy-cron-restart, cron-restart
+    - import_tasks: ./esxi/config.yml
     - name: crontab restart
-      command: sh /root/restart_cron
+      command: sh /restart_cron
       args:
-        removes: /root/restart_cron
+        removes: /restart_cron
       register: result
       tags: cron-restart
     - name: print crontab restart
       debug: var=result.stdout_lines
       tags: cron-restart
     - name: get all vms name
-      command: sh /root/base all
+      command: sh /base all
       register: content
       args:
-        removes: /root/base 
+        removes: /base 
       tags: all-vms, all-vm-name
     - name: print all vms name
       debug: var=content.stdout_lines 
       tags: all-vms, all-vm-name
     - name: get vm id
-      command: sh /root/base id "{{name}}" # ansible-playbook esxi.yml -e 'name="DSM"' --tags id
+      command: sh /base id "{{name}}" # ansible-playbook esxi.yml -e 'name="DSM"' --tags id
       register: id
       args: 
-        removes: /root/base
+        removes: /base
       tags: id
     - name: print id
       debug: var=id.stdout_lines 
       tags: id
     - name: get vm state
-      command: sh /root/base state "{{name}}" # ansible-playbook esxi.yml -e 'name="DSM"' --tags state
+      command: sh /base state "{{name}}" # ansible-playbook esxi.yml -e 'name="DSM"' --tags state
       register: state
       args: 
-        removes: /root/base
+        removes: /base
       tags: state
     - name: print state
       debug: var=state.stdout_lines 
       tags: state
     - name: suspend vm
-      command: sh /root/base suspend "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags suspend
+      command: sh /base suspend "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags suspend
       register: suspend
       args: 
-        removes: /root/base
+        removes: /base
       tags: suspend
     - name: print suspend result
       debug: var=suspend.stdout_lines 
       tags: suspend
     - name: start vm
-      command: sh /root/base start "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags start
+      command: sh /base start "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags start
       register: start
       args: 
-        removes: /root/base
+        removes: /base
       tags: start
     - name: print start result
       debug: var=start.stdout_lines 
       tags: start
     - name: shutdown vm
-      command: sh /root/base down "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags down
+      command: sh /base down "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags down
       register: down
       args: 
-        removes: /root/base
+        removes: /base
       tags: down
     - name: print down result
       debug: var=down.stdout_lines 

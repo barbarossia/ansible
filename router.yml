@@ -1,53 +1,26 @@
 - hosts: barbarossia
+  roles:
+      - openwrt
   tasks:
-    - name: copy Block
-      copy: 
-        src: /inventory/script/router/start_shaping
-        dest: /root/
-        mode: u=rx,g=r,o=r
-        force: yes
-      tags: copy
-    - name: copy unBlock
-      copy: 
-        src: /inventory/script/router/stop_shaping
-        dest: /root/
-        mode: u=rx,g=r,o=r
-        force: yes
-      tags: copy
-    - name: run block
-      command: sh /root/Block_torrents_using_iptables
-      args:
-        removes: /root/Block_torrents_using_iptables
-      tags: block
-    - name: run unblock
-      command: sh /root/UnBlock_torrents_using_iptables
-      args:
-        removes: /root/UnBlock_torrents_using_iptables
-      tags: unblock
-    - name: copy iptab
-      copy:
-        src: /inventory/script/router/iptab
-        dest: /root/
-        mode: u=rx,g=r,o=r
-        force: yes
-      tags: iptab
+    - import_tasks: ./router/service.yml
+    - import_tasks: ./router/config.yml
     - name: add ip to gfwlist
-      command: sh /root/iptab add "{{ip}}" "{{port}}"
+      command: sh /root/iptab add 192.168.1.12 1180
       args:
         removes: /root/iptab
       tags: add-gfwlist
     - name: remove ip to gfwlist
-      command: sh /root/iptab remove "{{ip}}" "{{port}}"
+      command: sh /root/iptab remove 192.168.1.12 1180
       args:
         removes: /root/iptab
       tags: remove-gfwlist
     - name: update ip to gfwlist # ansible-playbook router.yml -e 'ip="192.168.1.11" old_port="1480" new_port="1280"' --tags update-gfwlist
-      command: sh /root/iptab update "{{ip}}" "{{old_port}}" "{{new_port}}"
+      command: sh /root/iptab update 192.168.1.12 1180 1280
       args:
         removes: /root/iptab
       tags: update-gfwlist
     - name: check ip exist on gfwlist
-      command: sh /root/iptab exist "{{ip}}"
+      command: sh /root/iptab exist 192.168.1.12
       args:
         removes: /root/iptab
       register: output

@@ -1,0 +1,16 @@
+- name: run block
+  command: sh /root/Block_torrents_using_iptables
+  args:
+    removes: /root/Block_torrents_using_iptables
+  tags: block
+- name: run unblock
+  command: sh /root/UnBlock_torrents_using_iptables
+  args:
+    removes: /root/UnBlock_torrents_using_iptables
+  tags: unblock
+- name: run redsocks2
+  service: 
+    name: redsocks2
+    state: restarted
+    enabled: yes
+  tags: run-redsocks2

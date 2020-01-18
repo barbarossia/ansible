@@ -1,0 +1,21 @@
+- name: copy base
+  copy: 
+    src: /inventory/script/esxi/base
+    dest: /
+    mode: u=rx,g=r,o=r
+    force: yes
+  tags: copy, copy-base
+- name: copy crontab
+  copy: 
+    src: /inventory/script/esxi/etc/crontab
+    dest: /var/spool/cron/crontabs/root
+    mode: u=r,g=r,o=r+t
+    force: yes
+  tags: copy, copy-crontab
+- name: copy cron restart
+  copy: 
+    src: /inventory/script/esxi/restart_cron
+    dest: /
+    mode: u=rx,g=r,o=r
+    force: yes
+  tags: copy, copy-cron-restart, cron-restart
