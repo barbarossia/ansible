@@ -45,7 +45,7 @@
 - name: run npsboost test
   block:
     - name: npsboost test
-      command: sh /root/npsboost hk.*543
+      command: sh /root/npsboost {{URL}} hk.*543
       register: output
       args:
         removes: /root/npsboost

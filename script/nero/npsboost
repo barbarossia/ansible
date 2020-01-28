@@ -38,12 +38,11 @@ normalizeBase64()
         echo $strBase64
 }
 
-#URL=https://dingyue.my2one.live/link/1uKprA8cPv90ktbt?mu=1
-URL="https://npsboost.com/link/82PJwY1QQijnS88T?mu=1&filter_offline=1"
+URL=$1
 #echo -e $URL
 str=`curl --socks5 192.168.1.3:1280 -s $URL`
 #str=`curl -s $URL`
 echo `normalizeBase64 $str`|base64 -d|while read -r ssrBase64;
 do
-        tcppingssr $ssrBase64 $1
+        tcppingssr $ssrBase64 $2
 done

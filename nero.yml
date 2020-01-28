@@ -1,4 +1,6 @@
 - hosts: nero
+  vars_files:
+    - /inventory/group_vars/nero.yml
   roles:
       - openwrt
   tasks:
