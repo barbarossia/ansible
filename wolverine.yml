@@ -1,0 +1,4 @@
+- hosts: wolverine
+  tasks:
+    - import_tasks: ./wolverine/service.yml
+    - import_tasks: ./wolverine/config.yml

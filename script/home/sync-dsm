@@ -1,0 +1,64 @@
+#! /bin/bash
+
+server=192.168.1.112:/volume1
+today="$(date +%Y%m%d)"
+SYNC=/usr/bin/rsync
+
+function pre_process() {
+    src=$1
+    dest=$2
+
+    touch /mnt/sdb1/$src/rsync.lock
+    mount $server/$dest /mnt/download
+}
+
+function post_process() {
+    src=$1
+    dest=$2
+    
+    umount /mnt/download
+    rm /mnt/sdb1/$dest/rsync.lock 
+}
+
+function sync_photo() {
+    mv /mnt/download/upload/ /mnt/download/$today
+    $SYNC --exclude=@eaDir \
+        -av \
+        --log-file=/mnt/sdb1/photo/${today}_rsync.log \
+        --progress \
+        /mnt/download/$today/ /mnt/sdb1/photo/$today
+    mkdir /mnt/download/upload
+}
+
+function sync_dsm() {
+    $SYNC \
+        -av \
+        --log-file=/mnt/download/${today}_rsync.log \
+        --progress \
+        /mnt/sdb1/$src/ /mnt/download/
+}
+
+function sync() {
+    func=$1;
+    src=$2;
+    dest=$3;
+
+    test -f /mnt/sdb1/$dest/rsync.lock && exit 1;
+    pre_process $src $dest;
+    $func;
+    post_process $src $dest;
+}
+
+if [ "$1" == "photo" ]; then
+    sync sync_photo photo photo;
+elif [ "$1" == "document" ]; then
+    sync sync_dsm document document;
+elif [ "$1" == "backup" ]; then
+    sync sync_dsm backup backup;
+elif [ "$1" == "all" ]; then
+#    sync sync_photo photo photo;
+    sync sync_dsm document document;
+    sync sync_dsm backup backup;
+else 
+    echo "wrong argument"
+fi

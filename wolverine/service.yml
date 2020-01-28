@@ -1,0 +1,12 @@
+- name: Install  iperf3
+  yum: 
+    name: iperf3
+    state: present
+  tags: install-iperf3
+
+- name: run wolverine
+  service: 
+    name: wolverine
+    state: started
+    enabled: yes
+  tags: run

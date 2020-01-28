@@ -1,6 +1,0 @@
-- hosts: TestWg
-  tasks:
-    - name: copy script
-      copy: src=/inventory/esxi_suspend_vm.sh dest=/tmp/
-    - name: execute script
-      command: sh /tmp/esxi_suspend_vm.sh

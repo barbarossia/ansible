@@ -1,0 +1,7 @@
+- name: copy curl-speedtest
+  copy: 
+    src: /inventory/script/nero/curl-speedtest
+    dest: /root/
+    mode: u=rx,g=r,o=r
+    force: yes
+  tags: copy, copy-curl-speedtest

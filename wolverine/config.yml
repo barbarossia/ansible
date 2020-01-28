@@ -1,0 +1,15 @@
+- name: copy wolverine config
+  copy:
+    src: /inventory/script/wolverine/etc/v2ray/tls_ws.json
+    dest: /etc/barbarossia.xyz/tls_ws.json
+    mode: u=rx,g=r,o=r
+    force: yes
+  tags: copy, copy-config
+
+- name: copy wolverine init.d 
+  copy: 
+    src: /inventory/script/wolverine/etc/init.d/wolverine
+    dest: /etc/init.d/
+    mode: u=rwx,g=rx,o=rx
+    force: yes
+  tags: copy, copy-service

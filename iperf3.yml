@@ -1,0 +1,45 @@
+- name: step1
+  hosts: magneto
+  tasks:
+      - command: /usr/bin/iperf3 -s -D -p 8080 --pidfile /var/run/iperf3.pid 
+        tags: speedtest, speedtest-magneto
+
+- name: step2
+  hosts: nero
+  tasks:
+    - block:
+      - command: /usr/bin/iperf3 -c {{ hostvars['magneto']['ansible_eth0']['ipv4']['address'] }} -p 8080 -P 10 -R 
+        register: output
+      - debug: var=output.stdout_lines
+      tags: speedtest, speedtest-magneto
+
+- name: step3
+  hosts: magneto
+  tasks:
+      - command: /usr/bin/pkill iperf3
+        args:
+          removes: /var/run/iperf3.pid
+        tags: speedtest, speedtest-magneto
+
+- name: step4
+  hosts: wolverine
+  tasks:
+      - command: command /usr/bin/iperf3 -s -D -p 8080 --pidfile /var/run/iperf3.pid 
+        tags: speedtest, speedtest-wolverine
+
+- name: step5
+  hosts: nero
+  tasks:
+    - block:
+      - command: /usr/bin/iperf3 -c {{ hostvars['wolverine']['ansible_eth0']['ipv4']['address'] }} -p 8080 -P 10 -R 
+        register: output
+      - debug: var=output.stdout_lines
+      tags: speedtest, speedtest-wolverine
+
+- name: step6
+  hosts: wolverine
+  tasks:
+      - command: /usr/bin/pkill iperf3
+        args:
+          removes: /var/run/iperf3.pid
+        tags: speedtest, speedtest-wolverine

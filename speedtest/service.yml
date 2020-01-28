@@ -1,0 +1,40 @@
+- name: run speed test cyclops
+  block:
+    - command: sh /root/curl-speedtest 1180
+      register: output
+      args:
+        removes: /root/curl-speedtest
+    - debug: var=output.stdout_lines
+  tags: speedtest, speedtest-cyclops
+
+- name: run speed test magneto
+  block:
+    - command: sh /root/curl-speedtest 1280
+      register: output
+      args:
+        removes: /root/curl-speedtest
+    - debug: var=output.stdout_lines
+  tags: speedtest, speedtest-magneto
+
+- name: run speed test wolverine
+  block:
+    - command: sh /root/curl-speedtest 1480
+      register: output
+      args:
+        removes: /root/curl-speedtest
+    - debug: var=output.stdout_lines
+  tags: speedtest, speedtest-wolverine  
+
+- name: run speed test 
+  block:
+    - command: sh /root/curl-speedtest "{{ item }}"
+      register: output
+      args:
+        removes: /root/curl-speedtest
+      with_items: 
+        - 1180
+        - 1280
+        - 1480
+    - debug:
+        msg: "{{output}}"
+  tags: speedtest, speedtest-all  

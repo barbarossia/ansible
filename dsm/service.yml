@@ -1,0 +1,3 @@
+- name: add index
+  shell: cd /volume1/photo && /usr/syno/bin/synoindex -A {{folder}}
+  tags: add-index

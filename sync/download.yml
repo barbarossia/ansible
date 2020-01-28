@@ -1,7 +1,0 @@
-- name: copy sync-download
-  copy: 
-    src: /inventory/script/home/sync-download
-    dest: /root/sync-download
-    mode: u=rx,g=r,o=r
-    force: yes
-  tags: copy, sync

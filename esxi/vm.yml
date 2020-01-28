@@ -1,0 +1,67 @@
+- name: get all vms name
+  block:
+    - command: sh /base all
+      register: content
+      args:
+        removes: /base 
+    - debug:
+        msg: "{{content.stdout_lines}}"
+  tags: all-vms, all-vm-name
+
+- name: get all vms full name
+  block:
+    - command: vim-cmd vmsvc/getallvms
+      register: output
+    - debug:
+        msg: "{{output.stdout_lines}}"
+  tags: all-vm-fullname
+
+- name: get vm id
+  block:
+    - command: sh /base id "{{name}}" # ansible-playbook esxi.yml -e 'name="DSM"' --tags id
+      register: id
+      args: 
+        removes: /base
+    - debug: 
+        msg: "{{var=id.stdout_lines }}"
+  tags: id
+
+- name: get vm state
+  block:
+  - command: sh /base state "{{name}}" # ansible-playbook esxi.yml -e 'name="DSM"' --tags state
+    register: state
+    args: 
+      removes: /base
+  - debug:
+      msg: "{{state.stdout_lines}}"
+  tags: state
+
+- name: suspend vm
+  block:
+  - command: sh /base suspend "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags suspend
+    register: suspend
+    args: 
+      removes: /base
+  - debug:
+      msg: "{{suspend.stdout_lines}}"
+  tags: suspend
+
+- name: start vm
+  block:
+  - command: sh /base start "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags start
+    register: start
+    args: 
+      removes: /base
+  - debug: 
+      msg: "{{start.stdout_lines}}"
+  tags: start
+
+- name: shutdown vm
+  block:
+  - command: sh /base down "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags down
+    register: down
+    args: 
+      removes: /base
+  - debug:
+      msg: "{{down.stdout_lines}}"
+  tags: down

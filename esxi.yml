@@ -1,69 +1,10 @@
 - hosts: esxi
   tasks:
     - import_tasks: ./esxi/config.yml
-    - name: crontab restart
-      command: sh /restart_cron
-      args:
-        removes: /restart_cron
-      register: result
-      tags: cron-restart
-    - name: print crontab restart
-      debug: var=result.stdout_lines
-      tags: cron-restart
-    - name: get all vms name
-      command: sh /base all
-      register: content
-      args:
-        removes: /base 
-      tags: all-vms, all-vm-name
-    - name: print all vms name
-      debug: var=content.stdout_lines 
-      tags: all-vms, all-vm-name
-    - name: get vm id
-      command: sh /base id "{{name}}" # ansible-playbook esxi.yml -e 'name="DSM"' --tags id
-      register: id
-      args: 
-        removes: /base
-      tags: id
-    - name: print id
-      debug: var=id.stdout_lines 
-      tags: id
-    - name: get vm state
-      command: sh /base state "{{name}}" # ansible-playbook esxi.yml -e 'name="DSM"' --tags state
-      register: state
-      args: 
-        removes: /base
-      tags: state
-    - name: print state
-      debug: var=state.stdout_lines 
-      tags: state
-    - name: suspend vm
-      command: sh /base suspend "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags suspend
-      register: suspend
-      args: 
-        removes: /base
-      tags: suspend
-    - name: print suspend result
-      debug: var=suspend.stdout_lines 
-      tags: suspend
-    - name: start vm
-      command: sh /base start "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags start
-      register: start
-      args: 
-        removes: /base
-      tags: start
-    - name: print start result
-      debug: var=start.stdout_lines 
-      tags: start
-    - name: shutdown vm
-      command: sh /base down "{{name}}" # ansible-playbook esxi.yml -e 'name="apocalypse"' --tags down
-      register: down
-      args: 
-        removes: /base
-      tags: down
-    - name: print down result
-      debug: var=down.stdout_lines 
-      tags: down
+    - import_tasks: ./esxi/service.yml
+    - import_tasks: ./esxi/vm.yml
+
+
     
 
 

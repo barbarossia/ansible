@@ -1,0 +1,12 @@
+- name: run sync download
+  nohup:
+    command: sh /root/sync-download all
+  args: 
+    removes: /root/sync-download
+  tags: sync, sync-download
+- name: run sync dsm
+  nohup:
+    command: sh /root/sync-dsm photo
+  args: 
+    removes: /root/sync-dsm
+  tags: sync, sync-dsm   

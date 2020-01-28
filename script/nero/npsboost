@@ -1,0 +1,49 @@
+#!/bin/bash
+#curl -w "%{time_total}\n" -s -L www.google.com --socks5 192.168.1.105:18502 -o /dev/null
+tcppingssr()
+{
+#       sleep `head /dev/urandom | tr -dc "0123456789" | head -c1`
+        #remove ssr://, so we start with index 7
+        Config_info=$(echo -e "$1"|cut -c 7-2000)
+        Config_info=`normalizeBase64 $Config_info`
+        Config_info=${Config_info//_//}
+#       echo "=============="
+        Config_info=`echo $Config_info|base64 -d`
+#       echo $Config_info
+        result=$(echo $Config_info | grep "$2")
+#       echo "--------------"
+#       if [[ "$2" == "" || ${Config_info/$2//} != $Config_info ]]
+        if [[ "$2" == "" || "$result" != "" ]]
+        then
+                CMD=`echo "${Config_info}"|awk -F ":" '{printf "tcpping -c 1 -p %s %s|grep time=|awk -F \"time=\" ",$2,$1}'`
+                CMD=$CMD"'{print \$2}' "
+                PINGIME=`eval $CMD`
+                echo "$PINGIME:""${Config_info}"|awk -F ":" '{printf "%s,%s\t%s\n",$2,$3,$1}'
+        else
+                return
+        fi
+}
+
+
+normalizeBase64()
+{
+        strBase64=$1
+        strLength=${#strBase64}
+        padLength=`expr 4 - $strLength % 4 `
+        while [ $padLength -gt 0 -a $padLength -lt 4 ]
+        do
+                padLength=`expr $padLength - 1`
+                strBase64=$strBase64"="
+        done
+        echo $strBase64
+}
+
+#URL=https://dingyue.my2one.live/link/1uKprA8cPv90ktbt?mu=1
+URL="https://npsboost.com/link/82PJwY1QQijnS88T?mu=1&filter_offline=1"
+#echo -e $URL
+str=`curl --socks5 192.168.1.3:1280 -s $URL`
+#str=`curl -s $URL`
+echo `normalizeBase64 $str`|base64 -d|while read -r ssrBase64;
+do
+        tcppingssr $ssrBase64 $1
+done

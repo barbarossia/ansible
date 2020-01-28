@@ -1,33 +1,43 @@
 #!/bin/bash
 
-function convert() {
-  folder=$1
-  input_full_path=/mnt/input/$folder
-  echo "$input_full_path"
-  input_path=`basename $input_full_path`
-  echo "$input_path"
+function convert_folder() {
+    INPUT=/mnt/input;
+    OUTPUT=/mnt/output;
+    FOLDER=$1;
+    input_full_path="$INPUT/$FOLDER";
+#    echo "$input_full_path"
+    input_path=`basename $input_full_path`
+#    echo "$input_path"
 
-  output_full_path="/mnt/output/$input_path"
-  echo "$output_full_path"
+    output_full_path="$OUTPUT/$FOLDER"
+#    echo "$output_full_path"
+    [ -d != "$output_full_path" ]; mkdir -p $output_full_path && chmod 0777 $output_full_path;
+#    [ -f == "$output_full_path/convert.lock" ]; exit 0;    
+    touch $output_full_path/convert.lock
+    cd $input_full_path
 
-  mkdir -p $output_full_path
-  touch $output_full_path/convert.lock
+    for i in *.mp4;
+      do name=`echo "$i" | cut -d'.' -f1`
+#      echo "$i"
+#      echo "$name"
+#      echo "$output_full_path/$i"
+      touch "$output_full_path/$i.inprogress"
+      convert_single $i
+      rm "$output_full_path/$i.inprogress"
+    done
 
-  cd $input_full_path
+    rm $output_full_path/convert.lock
+    touch $output_full_path/completed
+}
 
-  for i in *.mp4;
-    do name=`echo "$i" | cut -d'.' -f1`
-    echo "$i"
-    echo "$name"
-    echo "$output_full_path/$i"
-    ffmpeg -i "$i" -c:v libx264 -r 30 -c:a copy "$output_full_path/$i"
-  done
-
-  rm $output_full_path/convert.lock
+function convert_single() {
+  file=$1;
+  ffmpeg -i "$file" -c:v libx264 -r 30 -c:a copy "$output_full_path/$file"
+#  echo "ffmpeg $file to $output_full_path/$file";
 }
 
 if [ "$1" == "convert" ]; then
-    convert $2
+    convert_folder $2;
 else 
     echo "wrong argument"
 fi

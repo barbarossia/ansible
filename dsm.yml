@@ -1,0 +1,4 @@
+- hosts: dsm
+  tasks:
+    - import_tasks: ./dsm/service.yml
+

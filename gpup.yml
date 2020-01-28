@@ -1,0 +1,9 @@
+- hosts: gpup
+  tasks:
+    - name: upload
+      block:
+        - command: /go/gpup/gpup /upload/{{folder}}/
+          register: output
+        - debug:
+            msg: "{{output}}"
+      tags: upload

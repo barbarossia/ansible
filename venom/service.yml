@@ -1,0 +1,25 @@
+- name: copy batch
+  copy: 
+    src: /inventory/script/venom/batch
+    dest: /home/barbarossia
+    mode: u=rx,g=r,o=r
+    force: yes
+  tags: copy
+
+- name: mount
+  mount:
+    path: /mnt/input
+    src: 192.168.1.113:/mnt/sdb1/temp/{{folder}}
+    fstype: ext4
+    state: present
+  become: yes
+  become_method: su
+  tags: mount
+
+- name: unmount
+  mount:
+    path: /mnt/{{folder}}
+    state: unmounted
+  become: yes
+  tags: ummount
+

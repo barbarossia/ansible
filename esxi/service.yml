@@ -1,0 +1,9 @@
+- name: crontab restart
+  block:
+    - command: sh /restart_cron
+      args:
+        removes: /restart_cron
+      register: result
+    - debug: 
+          msg: "{{result.stdout_lines}}"
+  tags: cron-restart

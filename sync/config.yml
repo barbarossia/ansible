@@ -1,0 +1,14 @@
+- name: copy sync-download
+  copy: 
+    src: /inventory/script/home/sync-download
+    dest: /root/sync-download
+    mode: u=rx,g=r,o=r
+    force: yes
+  tags: copy, copy-sync-download
+- name: copy sync-dsm
+  copy: 
+    src: /inventory/script/home/sync-dsm
+    dest: /root/sync-dsm
+    mode: u=rx,g=r,o=r
+    force: yes
+  tags: copy, copy-sync-dsm

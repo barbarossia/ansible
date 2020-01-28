@@ -1,11 +1,9 @@
 - hosts: venom
   tasks:
-    - name: Check that the batch exists
-      stat:
-        path: /home/barbarossia/batch
-      register: stat_result
+    - import_tasks: ./venom/service.yml
     - name: run convert batch
-      command: /usr/bin/screen -d -m /home/barbarossia/batch convert SIVR-061
-      when: stat_result.stat.exists == True 
-      tags: comvert
+      command: /usr/bin/screen -d -m /home/barbarossia/batch convert {{folder}}
+      args:
+        removes: /home/barbarossia/batch
+      tags: convert
 

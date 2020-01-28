@@ -2,10 +2,6 @@
   roles:
       - openwrt
   tasks:
-    - import_tasks: ./sync/download.yml
-    - name: run sync
-      nohup:
-        command: sh /root/sync-download all
-      args: 
-        removes: /root/sync-download
-      tags: sync
+    - import_tasks: ./sync/service.yml
+    - import_tasks: ./sync/config.yml
+   

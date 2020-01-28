@@ -1,0 +1,4 @@
+- hosts: magneto
+  tasks:
+    - import_tasks: ./magneto/service.yml
+    - import_tasks: ./magneto/config.yml

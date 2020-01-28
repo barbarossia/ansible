@@ -1,0 +1,7 @@
+- hosts: nero
+  gather_facts: False
+  roles:
+      - openwrt
+  tasks:
+    - import_tasks: ./speedtest/config.yml
+    - import_tasks: ./speedtest/service.yml

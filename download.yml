@@ -1,0 +1,6 @@
+- hosts: download
+  roles:
+      - openwrt
+  tasks:
+    - import_tasks: ./download/service.yml
+    - import_tasks: ./download/config.yml

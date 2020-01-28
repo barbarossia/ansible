@@ -1,0 +1,25 @@
+#!/bin/bash
+
+file=completed;
+
+output=/mnt/sdb1/temp/output;
+video=/mnt/sdb1/download/video;
+
+function sync_to_download() {
+    folder=$1;
+    if [ -f "$folder/$file" ]; then
+        rm "$folder/$file";
+        mv "$folder" "$video/"; 
+        #echo "$folder";
+        #echo "$video/";
+    fi
+}
+
+for f in "$output"/*
+do
+    if [ -d "${f}" ] ; then
+        #set -- ${f};
+        #echo "${f} is a folder"
+        sync_to_download ${f};
+    fi
+done

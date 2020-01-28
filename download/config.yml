@@ -1,0 +1,7 @@
+- name: copy sync-video
+  copy: 
+    src: /inventory/script/download/sync-video
+    dest: /root/
+    mode: u=rx,g=r,o=r
+    force: yes
+  tags: copy, copy-sync-video

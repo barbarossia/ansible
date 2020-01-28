@@ -1,0 +1,15 @@
+- name: copy magneto config
+  copy:
+    src: /inventory/script/magneto/etc/v2ray/tls_ws.json
+    dest: /etc/barbarossia.ml/tls_ws.json
+    mode: u=rx,g=r,o=r
+    force: yes
+  tags: copy, copy-config
+
+- name: copy magneto init.d 
+  copy: 
+    src: /inventory/script/magneto/etc/init.d/magneto
+    dest: /etc/init.d/
+    mode: u=rwx,g=rx,o=rx
+    force: yes
+  tags: copy, copy-service

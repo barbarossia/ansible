@@ -1,0 +1,12 @@
+- name: Install  iperf3
+  apt: 
+    name: iperf3
+    state: present
+  tags: install-iperf3
+
+- name: run magneto
+  service: 
+    name: magneto
+    state: started
+    enabled: yes
+  tags: magneto
