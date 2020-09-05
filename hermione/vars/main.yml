@@ -1,0 +1,9 @@
+---
+# vars file for hermione
+BIN: ''
+BIN_FULLPATH: ''
+VERSION: ''
+GET_LAST_VERSION: ''
+local: 0.0.0
+remote: 0.0.0
+regex: ''

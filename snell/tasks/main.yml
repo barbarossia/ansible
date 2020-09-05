@@ -1,0 +1,56 @@
+---
+# tasks file for snell
+#- include_tasks: service.yml
+
+# - name: print remote on snell
+#   debug: var=remote
+
+- name: Stop snell service
+  when: op == 'update'
+  command: sudo systemctl stop snell.service
+  become: yes
+
+- name: Unarchive a file that needs to be downloaded (added in 2.0)
+  when: op == 'install' or op == 'update'
+  become: yes
+  unarchive:
+    src: https://github.com/surge-networks/snell/releases/download/v{{ remote }}/snell-server-v{{ remote}}-linux-amd64.zip
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: Start snell service
+  when: op == 'update'
+  command: sudo systemctl start snell.service
+  become: yes
+
+#install copy and unpacking binary
+- name: copy snell-server.conf
+  when: op == 'install' 
+  become: true
+  template: 
+    src: ./templates/snell-server.conf.j2
+    dest: /etc/snell-server.conf
+    mode: u=r,g=r,o=r
+    force: true
+
+- name: copy the systemd 
+  when: op == 'install' 
+  become: true
+  copy: 
+    src: ./files/systemd-sample
+    dest: /lib/systemd/system/snell.service
+    mode: u=r,g=r,o=r
+    force: true
+  notify:
+    - Reload systemd daemon
+    - Enable service autostart
+    - Start snell service
+
+- name: show the port and psk 
+  when: op == 'install' 
+  shell: cat /etc/snell-server.conf
+  register: content
+
+- name: print the port and psk
+  when: op == 'install' 
+  debug: var=content

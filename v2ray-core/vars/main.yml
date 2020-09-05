@@ -1,0 +1,8 @@
+---
+# vars file for v2ray-core
+uuid: "{{ ansible_host | to_uuid }}"
+SVC: v2ray.service
+BIN: /usr/bin/v2ray
+CONF: tls_ws.json
+PATH_CONF: /etc/v2ray
+LOG: /var/log/v2ray

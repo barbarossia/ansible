@@ -1,0 +1,62 @@
+---
+# tasks file for snell
+#- include_tasks: service.yml
+
+- name: Stop service
+  when: op == 'update'
+  command: sudo systemctl stop {{ SVC }}
+  become: yes
+
+- name: copy
+  when: op == 'install' or op == 'update'
+  become: yes
+  copy:
+    src: ./files/{{BIN}}
+    dest: /usr/bin/{{ BIN }}
+    mode: 755
+    force: true
+
+- name: Start shadowsocks service
+  when: op == 'update'
+  command: sudo systemctl start {{ SVC }}
+  become: yes
+
+#install copy and unpacking binary
+- name: copy config.json
+  when: op == 'install' 
+  become: true
+  template: 
+    src: ./templates/{{ CONFIG }}.j2
+    dest: /etc/{{ CONFIG }}
+    mode: u=r,g=r,o=r
+    force: true
+
+- name: copy plugin
+  when: op == 'install' 
+  become: true
+  copy: 
+    src: ./files/{{ plugin }}
+    dest: /usr/local/bin/{{ plugin }}
+    mode: 755
+
+- name: copy the systemd 
+  when: op == 'install' 
+  become: true
+  template: 
+    src: ./templates/systemd.j2
+    dest: /lib/systemd/system/{{ SVC }}
+    mode: u=r,g=r,o=r
+    force: true
+  notify:
+    - Reload systemd daemon
+    - Enable service autostart
+    - Start snell service
+
+- name: show the port and psk 
+  when: op == 'install' 
+  shell: cat /etc/{{ CONFIG }}
+  register: content
+
+- name: print the port and psk
+  when: op == 'install' 
+  debug: var=content

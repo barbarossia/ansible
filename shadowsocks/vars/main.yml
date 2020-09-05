@@ -1,0 +1,9 @@
+---
+# vars file for shadowsocks
+plugin: "v2ray-plugin"
+PORT: "{{ 32767 |random(start=1024) }}"
+password: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+SVC: shadowsocks.service
+CONFIG: config.json
+LIBSODIUM_VER: 1.0.18
+MBEDTLS_VER: 2.16.6

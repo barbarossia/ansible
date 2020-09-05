@@ -1,0 +1,70 @@
+---
+# tasks file for v2ray-core
+#- include_tasks: service.yml
+
+- name: Stop service
+  when: op == 'update'
+  command: sudo systemctl stop {{SVC}}
+  become: yes
+
+#install copy and unpacking binary
+- name: Unarchive a file that needs to be downloaded (added in 2.0)
+  when: op == 'install' or op == 'update'
+  become: yes
+  unarchive:
+    src: https://github.com/v2ray/v2ray-core/releases/download/v{{remote}}/v2ray-linux-64.zip
+    dest: /usr/bin
+    mode: '0755'
+    remote_src: yes
+
+- name: Start service
+  when: op == 'update'
+  command: sudo systemctl start {{SVC}}
+  become: yes
+
+- name: create server.json
+  when: op == 'install'
+  become: yes
+  file:
+    path: "{{PATH_CONF}}"
+    state: directory
+    mode: '0755'
+
+- name: create log
+  when: op == 'install'
+  become: yes
+  file:
+    path: "{{LOG}}"
+    state: directory
+    mode: '0755'
+
+- name: copy server.json
+  when: op == 'install' 
+  become: true
+  template: 
+    src: ./templates/{{CONF}}.j2
+    dest: "{{PATH_CONF}}/{{CONF}}"
+    mode: u=r,g=r,o=r
+    force: true
+
+- name: copy the systemd 
+  when: op == 'install' 
+  become: true
+  template: 
+    src: ./templates/{{SVC}}.j2
+    dest: /lib/systemd/system/{{SVC}}
+    mode: u=r,g=r,o=r
+    force: true
+  notify:
+    - Reload systemd daemon
+    - Enable service autostart
+    - Start service
+
+- name: show the port and psk 
+  when: op == 'install' 
+  shell: cat {{PATH_CONF}}/{{CONF}}
+  register: content
+
+- name: print the port and psk
+  when: op == 'install' 
+  debug: var=content

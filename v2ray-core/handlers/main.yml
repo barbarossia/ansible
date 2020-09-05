@@ -1,0 +1,13 @@
+---
+# handlers file for v2ray-core
+- name: Reload systemd daemon
+  command: sudo systemctl daemon-reload
+  become: yes
+
+- name: Enable service autostart
+  command: sudo systemctl enable {{SVC}}
+  become: yes
+
+- name: Start service
+  command: sudo systemctl start {{SVC}}
+  become: yes

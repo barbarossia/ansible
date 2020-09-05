@@ -1,0 +1,7 @@
+# - name: Install nginx  
+#   become: true
+#   when: ansible_facts['distribution'] == 'Ubuntu'
+#   apt:
+#     pkg:
+#     - nginx
+#     state: present

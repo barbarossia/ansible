@@ -1,0 +1,13 @@
+---
+# handlers file for snell
+- name: Reload systemd daemon
+  command: sudo systemctl daemon-reload
+  become: yes
+
+- name: Enable service autostart
+  command: sudo systemctl enable snell.service
+  become: yes
+
+- name: Start snell service
+  command: sudo systemctl start snell.service
+  become: yes

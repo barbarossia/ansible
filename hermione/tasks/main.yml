@@ -1,0 +1,53 @@
+---
+# tasks file for hermione
+- name: print init op
+  debug: var=op
+
+- name: Get local version
+  when: local == '0.0.0'
+  shell: >     
+      Local_VERSION=$({{BIN_FULLPATH}} {{VERSION}} 2>&1)
+      VERSION=$(echo $Local_VERSION | 
+        {{regex}}
+      echo $VERSION
+  register: Local_VERSION
+
+- name: Print the Local_VERSION
+  debug: var=Local_VERSION
+
+- name: determain op is install
+  when: Local_VERSION.stdout.find("No such file or directory") != -1 or Local_VERSION.stdout.find("not found") != -1
+  set_fact:
+    local: '0.0.0'
+
+- name: determain local version
+  when: local == '0.0.0'
+  set_fact:
+    local: "{{ Local_VERSION.stdout  }}"
+
+- name: Print the local verion
+  debug: var=local
+
+- name: Get the latest version
+  when: remote == '0.0.0'
+  shell: >
+    LATEST_RELEASE=$(curl -L -s -H 'Accept: application/json' {{GET_LAST_VERSION}}) 
+          LATEST_VERSION=$(echo $LATEST_RELEASE | sed -e 's/.*"tag_name":"\([^"]*\)".*/\1/') 
+          echo $LATEST_VERSION
+  register: LATEST_VERSION
+  
+- name: determain latest version
+  when: remote == '0.0.0'
+  set_fact:
+    remote: "{{ LATEST_VERSION.stdout | regex_replace('v')}}"
+
+- name: Print remote
+  debug: var=remote
+
+- name: compare version
+  when: remote is version(local, '>') and op == 'skip'
+  set_fact:
+    op: 'update'
+
+- name: print op
+  debug: var=op

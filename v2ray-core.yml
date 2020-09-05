@@ -1,0 +1,4 @@
+---
+- hosts: ['hulk']
+  roles:
+    - v2ray-core

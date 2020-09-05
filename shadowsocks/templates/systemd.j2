@@ -1,0 +1,13 @@
+[Unit]
+Description=Shadowsocks Proxy Service
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+LimitNOFILE=32768
+ExecStart=/usr/bin/ss-server -c /etc/config.json
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,36 @@
+#sudo apt-get install --no-install-recommends gettext build-essential autoconf libtool libpcre3-dev asciidoc xmlto libev-dev libc-ares-dev automake libmbedtls-dev libsodium-dev
+- name: Install dependencies  (state=present is optional)
+  when: ansible_facts['distribution'] == 'Ubuntu'
+  become: true
+  apt:
+    pkg: 
+    - gettext 
+    - build-essential 
+    - autoconf  
+    - libtool  
+    - libpcre3-dev 
+    - asciidoc  
+    - xmlto  
+    - libev-dev 
+    - libc-ares-dev 
+    - automake
+    - libmbedtls-dev
+    - libsodium-dev
+    state: present
+
+- name: Install dependencies  (state=present is optional)
+  when: ansible_facts['distribution'] == 'CentOS'
+  become: true
+  yum:
+    pkg: 
+    - gettext 
+    - gcc
+    - autoconf  
+    - libtool  
+    - automake
+    - make 
+    - asciidoc  
+    - xmlto  
+    - c-ares-devel
+    - libev-devel
+    state: present

@@ -1,0 +1,6 @@
+- name: Install unzip  (state=present is optional)
+  when: ansible_facts['distribution'] == 'Ubuntu'
+  become: true
+  apt:
+    name: unzip
+    state: present

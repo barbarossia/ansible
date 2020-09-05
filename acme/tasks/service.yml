@@ -1,0 +1,16 @@
+- name: Install curl  (state=present is optional)
+  when: ansible_facts['distribution'] == 'Ubuntu'
+  become: true
+  apt:
+    pkg: 
+    - curl
+    - socat
+    state: present
+
+- name: Install curl  (state=present is optional)
+  when: ansible_facts['distribution'] == 'CentOS'
+  become: true
+  yum:
+    name: curl
+    state: present
+

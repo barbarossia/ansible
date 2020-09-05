@@ -1,0 +1,4 @@
+---
+- hosts: ['hawkeye']
+  roles:
+    - shadowsocks

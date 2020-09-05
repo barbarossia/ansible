@@ -1,0 +1,6 @@
+---
+# vars file for trojan-gfw
+password1: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+password2: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+SVC: trojan.service
+BIN: /usr/bin/trojan/trojan

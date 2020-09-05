@@ -1,0 +1,7 @@
+---
+# vars file for snell
+snell: snell-server-v1.1.1-linux-amd64
+snell_zip: "{{snell}}.zip"
+PORT: "{{ 32767 |random(start=1024) }}"
+PSK: "{{ lookup('password', '/dev/null length=15 chars=ascii_letters') }}"
+#ansible_become_password: upX8~!gfQ9*D

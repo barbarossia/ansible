@@ -1,0 +1,4 @@
+---
+- hosts: ['hulk', 'hawkeye']
+  roles:
+    - trojan-gfw

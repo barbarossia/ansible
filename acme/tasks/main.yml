@@ -1,0 +1,61 @@
+---
+# tasks file for acme
+- include_tasks: service.yml
+
+- name: Check that the acme.sh exists
+  stat:
+    path: ~/.acme.sh/acme.sh
+  register: stat_result
+
+- debug: var=stat_result
+
+- name: determain op is install
+  when: not stat_result.stat.exists
+  set_fact:
+    op: 'install'
+
+- name: install acme
+  when: op == 'install'
+  shell: >
+    curl https://get.acme.sh | sh
+  register: output
+
+- debug: var=output
+  when: op == 'install'
+
+- name: retrive domains' name
+  #when: op == 'install'
+  set_fact:
+    domain_string: "{{domain_string}} -d {{item}}"
+  with_items: "{{domain}}"
+
+- debug: 
+    msg: "{{domain_string}}"
+  when: op == 'install'
+
+- name: register domain
+  #when: op == 'install'
+  become: true
+  shell: >
+    /home/barbarossia/.acme.sh/acme.sh --issue -d {{domain_string}} --standalone -k ec-256
+  register: output
+
+- debug: 
+    msg: "{{domain[0]}}"
+
+- name: Create a directory if it does not exist
+  become: true
+  file:
+    path: /etc/{{domain[0]}} 
+    state: directory
+    #mode: '0755'
+
+- name: Create a directory if it does not exist
+  become: true
+  shell: >
+    /home/barbarossia/.acme.sh/acme.sh --installcert -d {{domain[0]}} --fullchainpath /etc/{{domain[0]}}/v2ray.pem --keypath /etc/{{domain[0]}}/v2ray.key --ecc
+  register: output
+ 
+- debug: var=output
+
+  

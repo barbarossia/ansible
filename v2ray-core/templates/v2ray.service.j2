@@ -1,0 +1,17 @@
+[Unit]
+Description=v2ray-core
+Documentation=man:v2ray-core https://github.com/v2ray/v2ray-core
+After=network.target network-online.target nss-lookup.target mysql.service mariadb.service mysqld.service
+
+[Service]
+Type=simple
+StandardError=journal
+User=root
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+ExecStart={{BIN}} -c {{PATH_CONF}}/{{CONF}}
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+RestartSec=3s
+
+[Install]
+WantedBy=multi-user.target
